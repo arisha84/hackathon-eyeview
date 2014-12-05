@@ -2,11 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+<<<<<<< HEAD
     <!--<parent>-->
         <!--<groupId>com.eyeview</groupId>-->
         <!--<artifactId>eyeview-superpom</artifactId>-->
         <!--<version>1.0.0-SNAPSHOT</version>-->
     <!--</parent>-->
+=======
+>>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
 
     <groupId>com.eyeview</groupId>
     <artifactId>hackathon-gingis</artifactId>
@@ -44,6 +47,7 @@
             <version>3.1.0</version>
         </dependency>
 
+<<<<<<< HEAD
         <!--<dependency>-->
             <!--<groupId>com.amazonaws</groupId>-->
             <!--<artifactId>amazon-kinesis-client</artifactId>-->
@@ -61,6 +65,8 @@
             <!--<artifactId>eyeview-utils</artifactId>-->
             <!--<version>1.0.0-SNAPSHOT</version>-->
         <!--</dependency>-->
+=======
+>>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
 
         <dependency>
             <groupId>io.netty</groupId>
@@ -75,12 +81,19 @@
             <version>1.7.6</version>
         </dependency>
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
 
+<<<<<<< HEAD
         <!--<dependency>-->
             <!--<groupId>org.mockito</groupId>-->
             <!--<artifactId>mockito-all</artifactId>-->
@@ -89,6 +102,11 @@
 
 
     </dependencies>
+=======
+
+
+
+>>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
 
     <build>
         <plugins>
