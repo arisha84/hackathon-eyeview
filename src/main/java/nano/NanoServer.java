@@ -35,7 +35,7 @@ public class NanoServer extends NanoHTTPD {
 
 
 
-    private static final HttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+    
 
     private static final CloseableHttpClient client=HttpClients.createDefault();
     private static final RequestConfig requestConfig = RequestConfig.custom()
@@ -129,6 +129,7 @@ public class NanoServer extends NanoHTTPD {
 
 
     public static void main(String[] args) {
+        System.out.println("Runnig version 1");
         ServerRunner.run(NanoServer.class);
     }
 }
