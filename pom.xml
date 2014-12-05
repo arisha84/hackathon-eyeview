@@ -2,14 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-<<<<<<< HEAD
     <!--<parent>-->
-        <!--<groupId>com.eyeview</groupId>-->
-        <!--<artifactId>eyeview-superpom</artifactId>-->
-        <!--<version>1.0.0-SNAPSHOT</version>-->
+    <!--<groupId>com.eyeview</groupId>-->
+    <!--<artifactId>eyeview-superpom</artifactId>-->
+    <!--<version>1.0.0-SNAPSHOT</version>-->
     <!--</parent>-->
-=======
->>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
 
     <groupId>com.eyeview</groupId>
     <artifactId>hackathon-gingis</artifactId>
@@ -47,26 +44,23 @@
             <version>3.1.0</version>
         </dependency>
 
-<<<<<<< HEAD
         <!--<dependency>-->
-            <!--<groupId>com.amazonaws</groupId>-->
-            <!--<artifactId>amazon-kinesis-client</artifactId>-->
-            <!--<version>1.0.0</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>javax.servlet</groupId>-->
-                    <!--<artifactId>servlet-api</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+        <!--<groupId>com.amazonaws</groupId>-->
+        <!--<artifactId>amazon-kinesis-client</artifactId>-->
+        <!--<version>1.0.0</version>-->
+        <!--<exclusions>-->
+        <!--<exclusion>-->
+        <!--<groupId>javax.servlet</groupId>-->
+        <!--<artifactId>servlet-api</artifactId>-->
+        <!--</exclusion>-->
+        <!--</exclusions>-->
         <!--</dependency>-->
 
         <!--<dependency>-->
-            <!--<groupId>com.eyeview</groupId>-->
-            <!--<artifactId>eyeview-utils</artifactId>-->
-            <!--<version>1.0.0-SNAPSHOT</version>-->
+        <!--<groupId>com.eyeview</groupId>-->
+        <!--<artifactId>eyeview-utils</artifactId>-->
+        <!--<version>1.0.0-SNAPSHOT</version>-->
         <!--</dependency>-->
-=======
->>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
 
         <dependency>
             <groupId>io.netty</groupId>
@@ -74,60 +68,48 @@
             <version>4.0.24.Final</version>
         </dependency>
 
-    
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>1.7.6</version>
         </dependency>
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
 
-<<<<<<< HEAD
         <!--<dependency>-->
-            <!--<groupId>org.mockito</groupId>-->
-            <!--<artifactId>mockito-all</artifactId>-->
-            <!--<version>1.9.0</version>-->
+        <!--<groupId>org.mockito</groupId>-->
+        <!--<artifactId>mockito-all</artifactId>-->
+        <!--<version>1.9.0</version>-->
         <!--</dependency>-->
 
 
     </dependencies>
-=======
-
-
-
->>>>>>> 0de08c46ece66e6ca51dde7c37a72ec18197a203
 
     <build>
         <plugins>
-        <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.5.2</version>
-            <configuration>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                    <phase>package</phase> <!-- bind to the packaging phase -->
-                    <goals>
-                        <goal>single</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
