@@ -4,10 +4,14 @@ import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.ServerRunner;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
@@ -25,10 +29,14 @@ public class NanoServer extends NanoHTTPD {
 
     private static final PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
+
+
+    private static final HttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+
     private static final CloseableHttpClient client=HttpClients.createDefault();
     private static final RequestConfig requestConfig = RequestConfig.custom()
             .setSocketTimeout(1000)
-            .setConnectTimeout(1000)
+            .setConnectTimeout(150)
             .build();
 
     public NanoServer() {
@@ -46,7 +54,16 @@ public class NanoServer extends NanoHTTPD {
 
             HttpGet httpget = new HttpGet("http://ec2-54-173-151-187.compute-1.amazonaws.com:15120"+session.getUri());
             httpget.setConfig(requestConfig);
-            CloseableHttpResponse response1 = client.execute(httpget);
+            CloseableHttpResponse response1 = null;
+            try {
+                response1 = client.execute(httpget);
+                //HttpResponse response1 = httpClient.execute(httpget);
+            } catch (ConnectTimeoutException timoutException) {
+                System.out.println("Timeout exception");
+                return new NanoHTTPD.Response(Response.Status.NO_CONTENT,MIME_HTML, "");
+
+            }
+
             try {
                 if(response1.getStatusLine().getStatusCode()!=200)
                 {
@@ -81,6 +98,9 @@ public class NanoServer extends NanoHTTPD {
 
         return new NanoHTTPD.Response("ERROR");
     }
+
+
+   // public void try
 
 
     public static void main(String[] args) {
