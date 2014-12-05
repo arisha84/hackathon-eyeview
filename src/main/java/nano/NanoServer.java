@@ -12,18 +12,25 @@ import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.ServerRunner;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static com.codahale.metrics.MetricRegistry.name;
@@ -36,12 +43,13 @@ public class NanoServer extends NanoHTTPD {
     private static final String[] hosts = new String[]{"ec2-54-173-151-187.compute-1.amazonaws.com", "ec2-54-173-25-92.compute-1.amazonaws.com"};
     private static final String[] endpoints = new String[]{"/adap","/altitude","/spotx"};
 
-    private static HttpGet[][] requests;
+    private static Map<String,HttpGet[]> requestMap=new HashMap<String,HttpGet[]>();
 
-    static{
-        requests=new HttpGet[endpoints.length][hosts.length];
-    }
-
+//    static{
+//        for
+//        requests=new HttpGet[endpoints.length][hosts.length];
+//
+//    }
 
     private static final MetricRegistry metrics = new MetricRegistry();
     private static final GraphiteSender sender=new GraphiteUDP("ec2-54-174-161-66.compute-1.amazonaws.com",8125);
@@ -52,7 +60,6 @@ public class NanoServer extends NanoHTTPD {
     private static final Counter bidderTimeouts = metrics.counter("rlb-hack.gingis.bidder.timeouts");
     private static final Timer bidderResponse = metrics.timer("rlb-hack.gingis.bidder.response_time");
     private static final Timer response = metrics.timer("rlb-hack.gingis.response_time");
-
 
     static{
         for(int ii=0;ii<hosts.length;ii++)
@@ -68,12 +75,21 @@ public class NanoServer extends NanoHTTPD {
     private static final CloseableHttpClient client=HttpClients.createDefault();
     private static final RequestConfig requestConfig = RequestConfig.custom()
             .setSocketTimeout(1000)
-            .setConnectTimeout(1000)
+            .setConnectTimeout(150)
             .build();
 
     public NanoServer() {
         super(15120);
-        reporter.start(1, TimeUnit.SECONDS);
+        setAsyncRunner(new AsyncRunner() {
+
+            ExecutorService executor = Executors.newFixedThreadPool(300);
+
+            @Override
+            public void exec(Runnable code) {
+                executor.execute(code);
+            }
+        });
+        reporter.start(3, TimeUnit.SECONDS);
     }
 
     private final Random rand=new Random();
@@ -83,13 +99,13 @@ public class NanoServer extends NanoHTTPD {
         HttpGet httpget=null;
         if(rand.nextBoolean())
         {
-            System.out.print("Relay to #1");
+//            System.out.print("Relay to #1");
             outboundRequests[0].inc();
             httpget = new HttpGet("http://ec2-54-173-151-187.compute-1.amazonaws.com:15120"+endpoint);
         }
         else
         {
-            System.out.print("Relay to #2");
+//            System.out.print("Relay to #2");
             outboundRequests[1].inc();
             httpget = new HttpGet("http://ec2-54-173-25-92.compute-1.amazonaws.com:15120"+endpoint);
         }
@@ -105,21 +121,29 @@ public class NanoServer extends NanoHTTPD {
 
         try {
             String uri = session.getUri();
-            System.out.println("Received: "+uri);
+            //System.out.println("Received: "+uri);
 
             HttpGet httpget = createRequest(session.getUri());
             final Timer.Context bidCtx = bidderResponse.time();
-            CloseableHttpResponse response1 = client.execute(httpget);
+            CloseableHttpResponse response1=null;
             bidCtx.stop();
 
             try {
-                if(response1.getStatusLine().getStatusCode()!=200)
-                {
-                    System.out.println("Bidder returned non-success code: " + response1.getStatusLine().toString());
-                }
+                response1 = client.execute(httpget);
+            } catch (ConnectTimeoutException timoutException) {
+                //System.out.println("Timeout exception");
+                return new NanoHTTPD.Response(Response.Status.NO_CONTENT,MIME_HTML, str);
+
+            }
+
+            try {
+//                if(response1.getStatusLine().getStatusCode()!=200)
+//                {
+//                    //System.out.println("Bidder returned non-success code: " + response1.getStatusLine().toString());
+//                }
                 StatusAdapter adap=new StatusAdapter(response1.getStatusLine());
 
-                System.out.println("Returning code: "+response1.getStatusLine());
+                //System.out.println("Returning code: "+response1.getStatusLine());
                 Response resp=new NanoHTTPD.Response(Response.Status.OK,"text/plain",str);
                 for(Map.Entry<String,String> header:session.getHeaders().entrySet())
                 {
@@ -147,9 +171,8 @@ public class NanoServer extends NanoHTTPD {
         return new NanoHTTPD.Response("ERROR");
     }
 
-
-
     public static void main(String[] args) {
+        System.out.println("Runnig version 4");
         ServerRunner.run(NanoServer.class);
     }
 }
