@@ -22,6 +22,6 @@ public class StatusAdapter implements NanoHTTPD.Response.IStatus {
 
     @Override
     public String getDescription() {
-        return status.getReasonPhrase();
+        return status.getStatusCode()+" "+status.getReasonPhrase();
     }
 }
