@@ -24,7 +24,7 @@ public class NanoServer extends NanoHTTPD {
     private static Logger log = LoggerFactory.getLogger(NanoServer.class);
 
     private static final PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-
+ 
     private static final CloseableHttpClient client=HttpClients.createDefault();
     private static final RequestConfig requestConfig = RequestConfig.custom()
             .setSocketTimeout(1000)
@@ -57,7 +57,7 @@ public class NanoServer extends NanoHTTPD {
 //                HttpEntity ent=response1.getEntity().getContent();
                 InputStream str=null;
                 System.out.println("Returning code: "+response1.getStatusLine());
-                Response resp=new NanoHTTPD.Response(Response.Status.OK,"text/plain","foo");
+                Response resp=new NanoHTTPD.Response(Response.Status.OK,"text/plain",str);
                 for(Map.Entry<String,String> header:session.getHeaders().entrySet())
                 {
                     resp.addHeader(header.getKey(),header.getValue());
