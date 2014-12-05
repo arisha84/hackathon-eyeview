@@ -41,7 +41,11 @@ public class NanoServer extends NanoHTTPD {
             httpget.setConfig(requestConfig);
             CloseableHttpResponse response1 = client.execute(httpget);
             try {
-                return new NanoHTTPD.Response(new StatusAdapter(response1.getStatusLine()),response1.getEntity().getContentType().getValue(),response1.getEntity().getContent());
+                StatusAdapter adap=new StatusAdapter(response1.getStatusLine());
+//                String type=response1.getEntity().getContentType().getValue();
+//                HttpEntity ent=response1.getEntity().getContent();
+                InputStream str=null;
+                return new NanoHTTPD.Response(adap,"text/plain",str);
             }
             catch(Exception e)
             {
