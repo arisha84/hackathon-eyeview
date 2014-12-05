@@ -1,0 +1,4 @@
+[version]
+dev = 10
+staging = 10
+prod = 10

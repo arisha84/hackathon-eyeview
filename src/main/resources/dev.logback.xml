@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <appender name="DebugFileAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/mnt/log/cep-manager-debug.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/mnt/log/cep-manager-debug-%d.log</FileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%date{ISO8601} %-5level [%thread] %logger{30} %msg%n</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="InfoFileAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/mnt/log/cep-manager-info.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/mnt/log/cep-manager-info-%d.log</FileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%date{ISO8601} %-5level [%thread] %msg%n</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <appender name="DebugStdOut" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %level [%thread] %logger{10} %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="RootFileAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/mnt/log/cep-manager-root-info.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/mnt/log/cep-manager-root-info-%d.log</FileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%date{ISO8601} %-5level [%thread] %logger{30} %msg%n</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <logger name="com.eyeview" level="INFO">
+        <appender-ref ref="DebugFileAppender"/>
+        <appender-ref ref="InfoFileAppender"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="RootFileAppender"/>
+    </root>
+
+  </configuration>
