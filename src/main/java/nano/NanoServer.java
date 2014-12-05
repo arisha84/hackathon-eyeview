@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by jscheller on 12/5/14.
@@ -35,7 +37,7 @@ public class NanoServer extends NanoHTTPD {
 
 
 
-    
+
 
     private static final CloseableHttpClient client=HttpClients.createDefault();
     private static final RequestConfig requestConfig = RequestConfig.custom()
@@ -45,6 +47,15 @@ public class NanoServer extends NanoHTTPD {
 
     public NanoServer() {
         super(15120);
+        setAsyncRunner(new AsyncRunner() {
+
+            ExecutorService executor = Executors.newFixedThreadPool(300);
+
+            @Override
+            public void exec(Runnable code) {
+                executor.execute(code);
+            }
+        });
     }
 
     private final Random rand=new Random();
@@ -54,12 +65,12 @@ public class NanoServer extends NanoHTTPD {
         HttpGet httpget=null;
         if(rand.nextBoolean())
         {
-            System.out.print("Relay to #1");
+            //System.out.print("Relay to #1");
             httpget = new HttpGet("http://ec2-54-173-151-187.compute-1.amazonaws.com:15120"+endpoint);
         }
         else
         {
-            System.out.print("Relay to #2");
+            //System.out.print("Relay to #2");
             httpget = new HttpGet("http://ec2-54-173-25-92.compute-1.amazonaws.com:15120"+endpoint);
         }
         httpget.setConfig(requestConfig);
@@ -72,7 +83,7 @@ public class NanoServer extends NanoHTTPD {
 
         try {
             String uri = session.getUri();
-            System.out.println("Received: "+uri);
+            //System.out.println("Received: "+uri);
 
             HttpGet httpget = createRequest(session.getUri());
             CloseableHttpResponse response1 = null;
@@ -80,7 +91,7 @@ public class NanoServer extends NanoHTTPD {
                 response1 = client.execute(httpget);
                 //HttpResponse response1 = httpClient.execute(httpget);
             } catch (ConnectTimeoutException timoutException) {
-                System.out.println("Timeout exception");
+                //System.out.println("Timeout exception");
                 return new NanoHTTPD.Response(Response.Status.NO_CONTENT,MIME_HTML, "");
 
             }
@@ -88,11 +99,11 @@ public class NanoServer extends NanoHTTPD {
             try {
                 if(response1.getStatusLine().getStatusCode()!=200)
                 {
-                    System.out.println("Bidder returned non-success code: " + response1.getStatusLine().toString());
+                    //System.out.println("Bidder returned non-success code: " + response1.getStatusLine().toString());
                 }
                 StatusAdapter adap=new StatusAdapter(response1.getStatusLine());
 
-                System.out.println("Returning code: "+response1.getStatusLine());
+                //System.out.println("Returning code: "+response1.getStatusLine());
                 Response resp=new NanoHTTPD.Response(Response.Status.OK,"text/plain",str);
                 for(Map.Entry<String,String> header:session.getHeaders().entrySet())
                 {
@@ -128,8 +139,10 @@ public class NanoServer extends NanoHTTPD {
     }
 
 
+
+
     public static void main(String[] args) {
-        System.out.println("Runnig version 1");
+        System.out.println("Runnig version 4");
         ServerRunner.run(NanoServer.class);
     }
 }
